@@ -1,0 +1,77 @@
+= OneSky: The Community-Powered Translation Service
+
+OneSky[link:http://www.oneskyapp.com] is a new service that lets developers reach a global audience by easily enabling them to translate their websites and applications to different languages through the help of the community.
+
+This gem is the basic interface to the RESTful API. It is used as the main building block for higher-level utilities and libraries such as the i18n-one_sky[link:http://rubygems.org/gems/i18n-one_sky] gem.
+
+= Installing
+
+Get from RubyGems.org by:
+
+  gem install one_sky
+
+= Usage
+
+Just the basic usage scenarios are shown here. See OneSky::Project for more available methods.
+
+== Initialization
+
+Provide the API key and secret which you can get from the web UI. Also provide the name of the project you created.
+
+  require 'one_sky'
+
+  client = OneSky::Project.new("my_api_key", "my_api_secret", "my_project")
+
+== Submit a phrase for translation
+
+Submit a string with no other parameters:
+
+  client.input("Hello World!")
+
+You can also provide other parameters:
+
+  client.input("Hello World!", :string_key => "my_string_key", :context => "my_context", :page => "my_page")
+
+== Get translated phrases
+
+So you've submitted your phrases and your translators/users or the general OneSky[link:http://www.oneskyapp.com] community have kindly provided translations for them. It's time now to download those.
+
+  translations = client.output
+
+  => {"Default"=>{"en-us"=>{"Hello World!"=>"Hello World!"}, "zh-cn"=>{"Hello World!"=>"\u4E16\u754C\u60A8\u597D\uFF01"}, "es-es"=>{"Hello World!"=>"Hola Mundo!"}}}
+
+Let's pretty print that a bit:
+
+  translations["Default"].map { |k,v| puts "#{k}: #{v['Hello World!']}" }
+
+  en-us: Hello World!
+  zh-cn: 世界您好！
+  es-es: Hola Mundo!
+
+== Provide a single sign-on (SSO) link for your translators
+
+OneSky[link:http://www.oneskyapp.com] is all about community-powered translations. You can mark your project as public and any OneSky[link:http://www.oneskyapp.com] member translator can help in translating your phrases. Or if you mark it as private, only those you give access to can do so. For instance, you'd like your own website's user base to help you out. You can take a user's unique ID and bind it to OneSky:
+
+  client.get_sso_link("myapp/users/123456")
+  => "http://rubyredtomatoes.oneskyapp.com/?time=1294020222&id=myapp/users/123456&data=3d56315499647c0419867283767aa270"
+
+That user can then use the above link to automatically sign in to OneSky[link:http://www.oneskyapp.com] and start translating for you.
+
+= Using with Rails
+
+See the i18n-one_sky[link:http://rubygems.org/gems/i18n-one_sky] gem for Rails and I18n integration.
+
+= History
+
+See CHANGELOG[link:CHANGELOG.html]
+
+= Credits
+
+See CREDITS[link:CREDITS.html]
+
+= License
+
+Copyright 2010-2011 {OneSky, Inc.}[link:http://www.oneskyapp.com/]
+
+Licensed under the {MIT License}[link:MIT-LICENSE.html].
+
