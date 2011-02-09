@@ -17,7 +17,7 @@ describe "Project" do
 
   it "raises an error when incorrect API credentials are passed." do
     @project.api_secret = "wrong secret"
-    lambda { @project.details }.should raise_error OneSky::ApiError
+    lambda { @project.details }.should raise_error RestClient::Exception
   end
 
   describe "#details" do
@@ -26,9 +26,27 @@ describe "Project" do
     end
   end
 
+  describe "#types" do
+    it "returns an array." do
+      types = @project.types
+      types.should be_an(Array)
+      types.size.should > 0
+    end
+  end
+
   describe "#languages" do
     it "returns an array." do
-      @project.languages.should be_an(Array)
+      langs = @project.languages
+      langs.should be_an(Array)
+      langs.size.should > 0
+    end
+  end
+
+  describe "#info" do
+    it "returns a hash." do
+      info = @project.info
+      info.should be_an(Hash)
+      info.has_key?("name").should be_true
     end
   end
 

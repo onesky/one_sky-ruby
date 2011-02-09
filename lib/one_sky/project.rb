@@ -11,12 +11,22 @@ module OneSky
 
     # Returns details about the project.
     def details
-      get("/details")["project"]
+      get("/project/details")["project"]
+    end
+
+    # Returns available types to be specified when creating a new the project.
+    def types
+      get("/project/types")["types"]
     end
 
     # Returns an array of available languages.
     def languages
-      get("/languages")["languages"]
+      get("/project/languages")["languages"]
+    end
+
+    # Returns info about your account. 
+    def info
+      get("/info")["application"]
     end
 
     # Returns the SSO URL for the given unique_id
@@ -89,22 +99,27 @@ module OneSky
     def hash_to_params(hash)
       hash.inject({}) { |o, (k,v)| o[k.to_s.gsub("_", "-").to_sym] = v; o }
     end
-  
+
+    def authorization_params
+      timestamp = Time.now.to_i.to_s
+      {:project => @name, :"api-key" => @api_key, :timestamp => timestamp, :"dev-hash" => Digest::MD5.hexdigest(timestamp + @api_secret)}
+    end
+ 
     def get(path, params = {}, options = {:content_type => "text/plain; charset=UTF-8"})
-      params = {:"api-key" => @api_key, :"api-secret" => @api_secret, :"project" => @name}.merge(params)
+      params = authorization_params.merge(params)
       parse_response(RestClient.get([API_ROOT_URL, path].join, {:params => params}.merge(options)))
     end
 
     def post(path, params = {}, options = {:content_type => "text/plain; charset=UTF-8"})
-      params = {:"api-key" => @api_key, :"api-secret" => @api_secret, :"project" => @name}.merge(params)
+      params = authorization_params.merge(params)
       parse_response(RestClient.post([API_ROOT_URL, path].join, params.merge(options)))
     end
 
     def parse_response(response)
-      raise ApiHttpResponseError, "HTTP response status code: #{response.code.inspect}." unless response.code.eql?(200)
       # Do not post-process response if it isn't JSON. (ie. Binary file returned from /output_mo.)
       return response.body unless response.headers[:content_type] =~ /json/
       response_hash = JSON.parse(response)
+
       raise ApiError, response.body if response_hash.has_key?("response") and response_hash["response"] != "ok"
       response_hash
     end
