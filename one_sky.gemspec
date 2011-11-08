@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "one_sky"
 
-  s.add_dependency "json", "~> 1.4.6"
+  s.add_dependency "json", ">= 1.4.6"
   s.add_dependency "rest-client", "~> 1.6.1"
 
   s.add_development_dependency "rspec", "~> 2.2.0"
