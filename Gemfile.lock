@@ -1,17 +1,17 @@
 PATH
   remote: .
   specs:
-    one_sky (0.0.1)
-      json (~> 1.4.6)
+    one_sky (0.0.3)
+      json (>= 1.4.6)
       rest-client (~> 1.6.1)
 
 GEM
   remote: http://rubygems.org/
   specs:
     diff-lcs (1.1.2)
-    json (1.4.6)
-    mime-types (1.16)
-    rest-client (1.6.1)
+    json (1.6.1)
+    mime-types (1.17.2)
+    rest-client (1.6.7)
       mime-types (>= 1.16)
     rspec (2.2.0)
       rspec-core (~> 2.2)
@@ -26,8 +26,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.0.0)
-  json (~> 1.4.6)
+  bundler (>= 1.0.0)
   one_sky!
-  rest-client (~> 1.6.1)
   rspec (~> 2.2.0)
