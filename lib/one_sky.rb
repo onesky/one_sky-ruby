@@ -7,5 +7,5 @@ module OneSky
 
   autoload :Project, 'one_sky/project'
 
-  %w[ApiError].each { |e| const_set(e, Class.new(StandardError)) }
+  class ApiError < StandardError; end
 end
