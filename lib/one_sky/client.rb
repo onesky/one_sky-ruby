@@ -18,15 +18,22 @@ module OneSky
       fetch_response :post, path, params, options
     end
   
+    # Returns an API proxy for the Project Management API
+    def project(name)
+      Project.new(name, self)
+    end
+    
+    # Returns an API proxy for the Utility API
+    def utility
+      Utility.new(self)
+    end
+    
     protected
 
-    def hash_to_params(hash)
-      hash.inject({}) { |o, (k,v)| o[k.to_s.gsub("_", "-").to_sym] = v; o }
-    end
-
+    # dev-hash = MD5( CONCATENATE( timestamp , YOUR_API_SECRET ) )
     def authorization_params
       timestamp = Time.now.to_i.to_s
-      {:"api-key" => @api_key, :timestamp => timestamp, :"dev-hash" => Digest::MD5.hexdigest(timestamp + @api_secret)}
+      {:"api-key" => self.api_key, :timestamp => timestamp, :"dev-hash" => Digest::MD5.hexdigest(timestamp + self.api_secret)}
     end
     
     def fetch_response(http_verb, path, params, options)
@@ -47,7 +54,7 @@ module OneSky
     end
     
     def api_path(path)
-      URI.join(API_ROOT_URL, path).to_s
+      URI.join(API_ROOT_URL, path.gsub(/^\//, "")).to_s
     end
 
     def parse_response(response)

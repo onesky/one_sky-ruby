@@ -3,10 +3,12 @@ require 'rest_client'
 require 'digest/md5'
 
 module OneSky
-  API_ROOT_URL = "https://api.oneskyapp.com/1"
-
-  autoload :Project, 'one_sky/project'
-  autoload :Client,  'one_sky/client'
-
   class ApiError < StandardError; end
 end
+
+require 'one_sky/client'
+require 'one_sky/platform'
+require 'one_sky/project'
+require 'one_sky/translation'
+require 'one_sky/utility'
+require 'one_sky/version'
