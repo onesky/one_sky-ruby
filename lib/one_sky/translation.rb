@@ -39,22 +39,23 @@ module OneSky
     end
     
     YAML_FORMAT = "RUBY_YAML".freeze
+    PO_FORMAT = "GNU_PO".freeze
     
-    # Upload a string file to add new strings. In RUBY_YAML format.
-    def upload_yaml(file)
-      upload_file(file, YAML_FORMAT)
-    end
+    # I don't believe these work right now.
+    
+      # Upload a string file to add new strings. In RUBY_YAML format.
+      def upload_yaml(file)
+        upload_file(file, YAML_FORMAT)
+      end
+    
+      # Upload a string file to add new strings. In GNU_PO format.
+      def upload_po(file)
+        upload_file(file, PO_FORMAT)
+      end
     
     # Download strings and translations as string file. In RUBY_YAML format.
     def download_yaml(locale)
       download_file(locale, YAML_FORMAT)
-    end
-    
-    PO_FORMAT = "GNU_PO".freeze
-    
-    # Upload a string file to add new strings. In GNU_PO format.
-    def upload_po(file)
-      upload_file(file, PO_FORMAT)
     end
     
     # Download strings and translations as string file. In GNU_PO format.
