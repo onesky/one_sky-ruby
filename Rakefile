@@ -19,6 +19,11 @@ task :default => :spec
 desc "Run specs"
 RSpec::Core::RakeTask.new do |t|
   t.pattern = "./spec/**/*_spec.rb" # don't need this, it's default.
-  # Put spec opts in a file named .rspec in root
+  t.rspec_opts = %w{--tag ~live}
 end
 
+desc "Run live specs"
+RSpec::Core::RakeTask.new("spec:live") do |t|
+  t.pattern = "./spec/**/*_spec.rb"
+  t.rspec_opts = %w{--tag live}
+end

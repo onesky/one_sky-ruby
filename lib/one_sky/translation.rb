@@ -14,7 +14,7 @@ module OneSky
     # Add new strings to be translated.
     #   expects an array of strings, or an array of hashes [{:string_key => k, :string => v}, ...]
     def input_strings(strings)
-      post("string/input", :input => input_string_array(strings))
+      post("string/input", :input => format_input_strings(strings))
     end
     
     # Add new strings to be translated.
@@ -30,12 +30,12 @@ module OneSky
     
     # Get the strings with translations.
     def output
-      get("string/output")
+      get_output
     end
     
     # Get the strings for a particular locale.
     def output_for_locale(locale)
-      get("string/output", :locale => locale)
+      get_output(locale)
     end
     
     YAML_FORMAT = "RUBY_YAML".freeze
@@ -65,6 +65,14 @@ module OneSky
     
     protected
     
+    # Get the strings with translations.
+    def get_output(locale=nil)
+      options = {}
+      options[:locale] = locale if locale
+      
+      get("string/output", options)["translation"]
+    end
+    
     # Upload a string file to add new strings.
     def upload_file(file, format)
       post("string/upload", :file => file, :format => format)
@@ -83,11 +91,11 @@ module OneSky
       client.post(path, params.merge(:"platform-id" => platform_id))
     end
     
-    def input_string_array(strings)
-      JSON.dump(strings.map{|s| input_string(s)})
+    def format_input_strings(strings)
+      JSON.dump(strings.map{|string| format_input_string(string)})
     end
     
-    def input_string(string)
+    def format_input_string(string)
       case string
       when String
         {:string => string}
