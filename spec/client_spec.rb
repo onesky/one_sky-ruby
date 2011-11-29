@@ -1,4 +1,5 @@
-require 'helpers'
+require 'spec_helper'
+
 describe OneSky::Client do
 
   let(:api_key) { "apikey" }
@@ -8,6 +9,33 @@ describe OneSky::Client do
   
   let(:fake_response) { mock("some response", :headers => {:content_type => "text/plain"}, :body => "response") }
   let(:fake_json) {     mock("json response", :headers => {:content_type => "json"}, :body => %|{"some": "json"}|) }
+  
+  describe "proxies" do
+    describe "utility" do
+      it "returns a OneSky::Utility instance" do
+        client.utility.should be_an_instance_of OneSky::Utility
+      end
+      
+      it "sets the client to itself" do
+        client.utility.client.should == client
+      end
+    end
+    
+    describe "project" do
+      it "returns a OneSky::Project instance" do
+        client.project("some-project").should be_an_instance_of OneSky::Project
+      end
+      
+      it "sets the client to itself" do
+        client.project("some-project").client.should == client
+      end
+      
+      it "sets the provided project name" do
+        client.project("some-project").project_name.should == "some-project"
+      end
+    end
+    
+  end
   
   describe "get" do
 

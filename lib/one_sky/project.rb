@@ -28,7 +28,7 @@ module OneSky
     protected
     
     def get(path, params={})
-      client.get(path, params.merge(:project => name))
+      client.get(path, params.merge(:project => project_name))
     end
 
   end

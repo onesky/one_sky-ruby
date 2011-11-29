@@ -1,5 +1,5 @@
 # coding: utf-8
-require 'helpers'
+require 'spec_helper'
 
 describe "Project" do
   include OneSkySpecHelpers

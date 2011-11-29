@@ -1,5 +1,4 @@
-$:.unshift File.expand_path('..', __FILE__)
-$:.unshift File.expand_path('../../lib', __FILE__)
+$:.unshift File.expand_path(File.dirname(__FILE__)+'/../lib')
 
 require 'one_sky'
 require 'time_freeze'

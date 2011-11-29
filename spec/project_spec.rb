@@ -1,58 +1,77 @@
-require 'helpers'
+require 'spec_helper'
 
-describe "Project" do
-  include OneSkySpecHelpers
-
-  it "raises an error when initialization values are nil." do
-    lambda { @project = OneSky::Project.new(nil, nil, nil) }.should raise_error ArgumentError
+describe OneSky::Project do
+  let(:api_key) { "apikey" }
+  let(:secret)  { "secret" }
+  let(:project_name) { "some-project" }
+  
+  let(:client) { OneSky::Client.new(api_key, secret) }
+  let(:project) { client.project(project_name) }
+  
+  describe "proxies" do
+    
+    describe "platform" do
+      
+      let(:platform_id) { 123 }
+      let(:platform) { project.platform(platform_id) }
+      
+      it "returns a OneSky::Platform instance" do
+        platform.should be_an_instance_of OneSky::Platform
+      end
+      
+      it "sets the client to itself" do
+        platform.client.should == client
+      end
+      
+      it "sets the provided platform_id" do
+        platform.platform_id.should == platform_id
+      end
+    end
+    
   end
-end
-
-describe "Project" do
-  include OneSkySpecHelpers
-
-  before do
-    @project = create_project
-  end
-
-  it "raises an error when incorrect API credentials are passed." do
-    @project.api_secret = "wrong secret"
-    lambda { @project.details }.should raise_error RestClient::Exception
-  end
-
-  describe "#details" do
-    it "returns project name among other things." do
-      @project.details["name"].should == @project.name
+  
+  describe "platforms" do
+    
+    let(:example) do
+      {
+          "platforms" => [
+              {
+                  "id" => 1,
+                  "type" => "iPhone/iPad App",
+                  "code" => "ios"
+              },
+              {
+                  "id" => 2,
+                  "type" => "Miscelleneous",
+                  "code" => "misc",
+                  "description" => "database"
+              }
+          ]
+      }
+    end
+    
+    it "calls /project/platforms" do
+      # examples from the api docs
+      client.should_receive(:get).with("project/platforms", :project => project_name).and_return(example)
+      project.platforms.should == example["platforms"]
     end
   end
-
-  describe "#types" do
-    it "returns an array." do
-      types = @project.types
-      types.should be_an(Array)
-      types.size.should > 0
+  
+  describe "details" do
+    
+    let(:example) do
+      {
+          "project" => {
+              "name" => "Website",
+              "base_locale" => "en_US"
+          }
+      }
+    end
+    
+    it "calls /project/details" do
+      client.should_receive(:get).with("project/details", :project => project_name).and_return(example)
+      project.details.should == example["project"]
     end
   end
-
-  describe "#languages" do
-    it "returns an array." do
-      langs = @project.languages
-      langs.should be_an(Array)
-      langs.size.should > 0
-    end
-  end
-
-  describe "#info" do
-    it "returns a hash." do
-      info = @project.info
-      info.should be_an(Hash)
-      info.has_key?("name").should be_true
-    end
-  end
-
-  describe "#get_sso_link" do
-    it "returns a URL string." do
-      @project.get_sso_link("rspec_process").should match /^http.*$/
-    end
-  end
+  
 end

@@ -20,17 +20,17 @@ module OneSky
     end
     
     # Get the Single-Sign-On link for logging in.
-    def sso_link(unique_id, name)
+    def get_sso_link(unique_id, name)
       post("sso/get-link", {:"unique-id" => unique_id, :name => name})["url"]
     end
     
     protected
     
-    def get(path, params={})
-      client.get(path, params)
+    def get(path)
+      client.get(path)
     end
     
-    def post(path, params={})
+    def post(path, params)
       client.post(path, params)
     end
     
