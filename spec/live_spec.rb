@@ -175,7 +175,7 @@ describe OneSky, :live => true do
       po.should be_an_instance_of String
       
       # some way of verifying it looks like a po
-      po.should match("msgid \"test1\"\nmsgstr \"")
+      po.should match(%(msgid "test1"\nmsgstr "))
     end
   end
     
