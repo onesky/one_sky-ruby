@@ -12,12 +12,16 @@ module OneSky
     end
 
     # Add new strings to be translated.
-    #
-    # 
-    def input(strings)
-      post("string/input", :input => JSON.dump(input_string_array(strings)))
+    #   expects an array of strings, or an array of hashes [{:string_key => k, :string => v}, ...]
+    def input_strings(strings)
+      post("string/input", :input => input_string_array(strings))
     end
     
+    # Add new strings to be translated.
+    #   expects a string, or a hash of {:string_key => k, :string => v}
+    def input_string(string)
+      input_strings([string])
+    end
     
     # Add translation to a string.
     def translate(string_key, locale, translation)
@@ -29,13 +33,47 @@ module OneSky
       get("string/output")
     end
     
-    # Download strings and translations as RUBY_YAML file.
+    # Get the strings for a particular locale.
+    def output_for_locale(locale)
+      get("string/output", :locale => locale)
+    end
+    
+    YAML_FORMAT = "RUBY_YAML".freeze
+    
+    # Upload a string file to add new strings. In RUBY_YAML format.
+    def upload_yaml(file)
+      upload_file(file, YAML_FORMAT)
+    end
+    
+    # Download strings and translations as string file. In RUBY_YAML format.
     def download_yaml(locale)
-      get("string/download", :locale => locale, :format => "RUBY_YAML")
+      download_file(locale, YAML_FORMAT)
+    end
+    
+    PO_FORMAT = "GNU_PO".freeze
+    
+    # Upload a string file to add new strings. In GNU_PO format.
+    def upload_po(file)
+      upload_file(file, PO_FORMAT)
+    end
+    
+    # Download strings and translations as string file. In GNU_PO format.
+    def download_po(locale)
+      download_file(locale, PO_FORMAT)
     end
     
     protected
-
+    
+    # Upload a string file to add new strings.
+    def upload_file(file, format)
+      post("string/upload", :file => file, :format => format)
+    end
+    
+    # Download strings and translations as string file.
+    def download_file(locale, format)
+      get("string/download", :locale => locale, :format => format)
+    end
+    
     def get(path, params={})
       client.get(path, params.merge(:"platform-id" => platform_id))
     end
@@ -45,18 +83,21 @@ module OneSky
     end
     
     def input_string_array(strings)
-      Array(strings).map{|s| input_string(s)}
+      JSON.dump(strings.map{|s| input_string(s)})
     end
     
     def input_string(string)
       case string
       when String
         {:string => string}
-      else
+      when Hash
         dashify_string_hash(string)
+      else
+        raise "input string must either be a string, or a hash"
       end
     end
     
+    # convert to "string-key" not "string_key"
     def dashify_string_hash(string_hash)
       output = Hash.new
       string_hash.each do |key, value|
