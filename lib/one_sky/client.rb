@@ -1,4 +1,14 @@
+require 'json'
+require 'rest_client'
+require 'digest/md5'
+
 module OneSky
+  
+  # Base implemention of an API client
+  # based on the one sky api version 2.
+  # 
+  #   http://developer.oneskyapp.com/api/list/v/2
+  #
   class Client
     attr_accessor :api_key, :api_secret
 
@@ -8,6 +18,7 @@ module OneSky
       @api_key, @api_secret = api_key, api_secret
     end
     
+    # Api version 2
     API_ROOT_URL = "https://api.oneskyapp.com/2/".freeze
     
     def get(path, params = {}, options = nil)
