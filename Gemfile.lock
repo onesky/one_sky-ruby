@@ -21,6 +21,7 @@ GEM
     rspec-expectations (2.2.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.2.0)
+    time_freeze (0.1.1)
 
 PLATFORMS
   ruby
@@ -29,3 +30,4 @@ DEPENDENCIES
   bundler (>= 1.0.0)
   one_sky!
   rspec (~> 2.2.0)
+  time_freeze
