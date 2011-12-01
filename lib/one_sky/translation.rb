@@ -23,6 +23,15 @@ module OneSky
       input_strings([string])
     end
     
+    # Add new strings to be translated.
+    #   expects a hash of {"string_key1" => "String 1", "string_key2" => "String 2"}
+    def input_phrases(phrases)
+      strings = phrases.map do |string_key, string|
+        {:string_key => string_key, :string => string}
+      end
+      input_strings(strings)
+    end
+    
     # Add translation to a string.
     def translate(string_key, locale, translation)
       post("string/translate", :"string-key" => string_key, :locale => locale, :translation => translation)

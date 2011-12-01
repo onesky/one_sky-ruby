@@ -56,6 +56,13 @@ describe OneSky::Translation do
     end
   end
   
+  describe "input_phrases" do
+    it "defers to input_strings" do
+      translation.should_receive(:input_strings).with([{:string_key => "test1", :string => "Test 1"}])
+      translation.input_phrases("test1" => "Test 1")
+    end
+  end
+  
   describe "translate" do
     
     let(:string_key) { "test1" }

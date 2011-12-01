@@ -109,6 +109,10 @@ describe OneSky, :live => true do
       client.project(project_name).platform(platform_id).translation
     end
     
+    it "input_phrases" do
+      translation.input_phrases("test1" => "Test 1", "test2" => "Test 2")
+    end
+    
     it "input_strings - as strings" do
       translation.input_strings(["test1", "test2"])
     end
