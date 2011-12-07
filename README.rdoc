@@ -20,23 +20,67 @@ Provide the API key and secret which you can get from the web UI. Also provide t
 
   require 'one_sky'
 
-  client = OneSky::Project.new("my_api_key", "my_api_secret", "my_project")
+  client = OneSky::Client.new("my_api_key", "my_api_secret")
+  
+== Project
+
+Load a specific project by name.
+
+  project = client.project("my-project-name")
+
+Get the details of the project.
+
+  project.details
+  
+See what platforms are available.
+
+  project.platforms
+  
+== Platform
+
+Load a specific platform by id.
+
+  platform = project.platform(123)
+  
+Get the details of the platform.
+
+  platform.details
+  
+See what locales are assigned.
+
+  platform.locales
+  
+== Translation
+
+Get the translation proxy for a platform
+
+  translation = platform.translation
 
 == Submit a phrase for translation
 
-Submit a string with no other parameters:
+Submit a single string:
 
-  client.input("Hello World!")
+  translation.input_string("Hello World!")
 
-You can also provide other parameters:
+Submit a string with a specified key, context, and page:
 
-  client.input("Hello World!", :string_key => "my_string_key", :context => "my_context", :page => "my_page")
+  translation.input_string(:string => "Hello World!", :string_key => "hello_world", :context => "my_context", :page => "my_page")
 
+Submit many strings at once:
+
+  translation.input_strings(["Hello World!", "Goodbye Moon"])
+  
+== Provide a translation
+
+Submit a translation for a given key, in a given locale.
+
+  translation.translate("hello_world", "zh_CN", "世界你好")
+  
 == Get translated phrases
 
 So you've submitted your phrases and your translators/users or the general OneSky[link:http://www.oneskyapp.com] community have kindly provided translations for them. It's time now to download those.
 
-  translations = client.output
+  translations = translation.output
 
   => {"Default"=>{"en-us"=>{"Hello World!"=>"Hello World!"}, "zh-cn"=>{"Hello World!"=>"\u4E16\u754C\u60A8\u597D\uFF01"}, "es-es"=>{"Hello World!"=>"Hola Mundo!"}}}
 
@@ -52,7 +96,7 @@ Let's pretty print that a bit:
 
 OneSky[link:http://www.oneskyapp.com] is all about community-powered translations. You can mark your project as public and any OneSky[link:http://www.oneskyapp.com] member translator can help in translating your phrases. Or if you mark it as private, only those you give access to can do so. For instance, you'd like your own website's user base to help you out. You can take a user's unique ID and bind it to OneSky:
 
-  client.get_sso_link("myapp/users/123456")
+  client.utility.get_sso_link("myapp/users/123456", "fred")
   => "http://rubyredtomatoes.oneskyapp.com/?time=1294020222&id=myapp/users/123456&data=3d56315499647c0419867283767aa270"
 
 That user can then use the above link to automatically sign in to OneSky[link:http://www.oneskyapp.com] and start translating for you.

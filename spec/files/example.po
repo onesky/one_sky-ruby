@@ -1,0 +1,2 @@
+msgid "test1"
+msgstr "Test 1"
