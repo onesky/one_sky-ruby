@@ -13,23 +13,23 @@ module OneSky
 
     # Add new strings to be translated.
     #   expects an array of strings, or an array of hashes [{:string_key => k, :string => v}, ...]
-    def input_strings(strings)
-      post("string/input", :input => format_input_strings(strings))
+    def input_strings(strings, tag = "Default")
+      post("string/input", :input => format_input_strings(strings), :tag => tag)
     end
     
     # Add new strings to be translated.
     #   expects a string, or a hash of {:string_key => k, :string => v}
-    def input_string(string)
-      input_strings([string])
+    def input_string(string, tag = "Default")
+      input_strings([string], tag)
     end
     
     # Add new strings to be translated.
     #   expects a hash of {"string_key1" => "String 1", "string_key2" => "String 2"}
-    def input_phrases(phrases)
+    def input_phrases(phrases, tag = "Default")
       strings = phrases.map do |string_key, string|
         {:string_key => string_key, :string => string}
       end
-      input_strings(strings)
+      input_strings(strings, tag)
     end
     
     # Add translation to a string.

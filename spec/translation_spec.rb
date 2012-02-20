@@ -21,17 +21,26 @@ describe OneSky::Translation do
       [{:string => "test1"}, {:string => "test2"}]
     }
     
+    
     context "with an array of strings" do
       it "calls /string/input" do
-        client.should_receive(:post).with("string/input", :input => JSON.dump(hash_array), :"platform-id" => platform_id)
+        client.should_receive(:post).with("string/input", :input => JSON.dump(hash_array), :tag => "Default", :"platform-id" => platform_id)
         
         translation.input_strings(string_array)
       end
     end
-    
+
+    context "with an array of strings and tag" do
+      it "calls /string/input" do
+        client.should_receive(:post).with("string/input", :input => JSON.dump(hash_array), :tag => "tagged", :"platform-id" => platform_id)
+        
+        translation.input_strings(string_array, "tagged")
+      end
+    end
+
     context "with an array of hashes" do
       it "calls /string/input" do
-        client.should_receive(:post).with("string/input", :input => JSON.dump(hash_array), :"platform-id" => platform_id)
+        client.should_receive(:post).with("string/input", :input => JSON.dump(hash_array), :tag => "Default", :"platform-id" => platform_id)
         
         translation.input_strings(hash_array)
       end
@@ -42,7 +51,7 @@ describe OneSky::Translation do
         original = [{:string => "Test 1", :string_key => "test1"}]
         dasherized = [{:string => "Test 1", :"string-key" => "test1"}]
         
-        client.should_receive(:post).with("string/input", :input => JSON.dump(dasherized), :"platform-id" => platform_id)
+        client.should_receive(:post).with("string/input", :input => JSON.dump(dasherized), :tag => "Default", :"platform-id" => platform_id)
         
         translation.input_strings(original)
        end
@@ -51,14 +60,14 @@ describe OneSky::Translation do
   
   describe "input_string" do
     it "defers to input_strings" do
-      translation.should_receive(:input_strings).with(["test1"])
+      translation.should_receive(:input_strings).with(["test1"], "Default")
       translation.input_string("test1")
     end
   end
   
   describe "input_phrases" do
     it "defers to input_strings" do
-      translation.should_receive(:input_strings).with([{:string_key => "test1", :string => "Test 1"}])
+      translation.should_receive(:input_strings).with([{:string_key => "test1", :string => "Test 1"}], "Default")
       translation.input_phrases("test1" => "Test 1")
     end
   end
