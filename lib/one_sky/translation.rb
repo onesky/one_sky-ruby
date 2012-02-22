@@ -67,13 +67,13 @@ module OneSky
       end
 
     # Download strings and translations as string file. In RUBY_YAML format.
-    def download_yaml(locale)
-      download_file(locale, YAML_FORMAT)
+    def download_yaml(locale, options={})
+      download_file(options.merge(:locale => locale, :format => YAML_FORMAT))
     end
 
     # Download strings and translations as string file. In GNU_PO format.
-    def download_po(locale)
-      download_file(locale, PO_FORMAT)
+    def download_po(locale, options ={})
+      download_file(options.merge(:locale => locale, :format => PO_FORMAT))
     end
 
     protected
@@ -92,8 +92,8 @@ module OneSky
     end
 
     # Download strings and translations as string file.
-    def download_file(locale, format)
-      get("string/download", :locale => locale, :format => format)
+    def download_file(options)
+      get("string/download", options)
     end
 
     def get(path, params={})
