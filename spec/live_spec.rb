@@ -43,7 +43,7 @@ describe OneSky, :live => true do
       locales.should be_an_instance_of Array
       locales.should_not be_empty
       en_us = locales.detect{|l| l["locale"] == english_locale }
-      en_us["name"]["eng"].should == "English (US)"
+      en_us["name"]["eng"].should == "English"
     end
     
     it "platform_types" do
@@ -51,7 +51,7 @@ describe OneSky, :live => true do
       types.should be_an_instance_of Array
       types.should_not be_empty
       website = types.detect{|t| t["code"] == platform_code }
-      website.should == {"name" => "Website", "code" => platform_code}
+      website.should == {"name" => "Regular Website", "code" => platform_code}
     end
     
     it "get_sso_link" do
@@ -100,7 +100,7 @@ describe OneSky, :live => true do
       locales.should be_an_instance_of Array
       locales.should_not be_empty
       en_us = locales.detect{|l| l["locale"] == english_locale }
-      en_us["name"]["eng"].should == "English (US)"
+      en_us["name"]["eng"].should == "English"
     end
   end
   
@@ -146,7 +146,7 @@ describe OneSky, :live => true do
     it "output_for_locale" do
       output = translation.output_for_locale(chinese_locale)
       output.should be_an_instance_of Hash
-      
+
       output["Default"].keys.should == [chinese_locale]
       output["Default"][chinese_locale].should have_key("test1")
     end
@@ -165,9 +165,11 @@ describe OneSky, :live => true do
     end
     
     it "download_yaml" do
+      chinese_locale = "zh-CN"
+
       yaml = translation.download_yaml(chinese_locale)
       yaml.should be_an_instance_of String
-      
+
       hash = YAML.load(yaml)
       hash.should be_an_instance_of Hash
       
