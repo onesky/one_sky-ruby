@@ -73,7 +73,7 @@ module OneSky
       return response.body unless response.headers[:content_type] =~ /json/
       response_hash = JSON.parse(response.body)
 
-      raise ApiError, response.body if response_hash.has_key?("response") and response_hash["response"] != "ok"
+      raise ApiError, response.body if response_hash.has_key?("response") and (response_hash["response"] != "ok" && response_hash["response"] != 'upload-in-progress')
       response_hash
     end
   end

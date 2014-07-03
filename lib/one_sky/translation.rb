@@ -30,10 +30,18 @@ module OneSky
     # Add new strings to be translated.
     #   expects a hash of {"string_key1" => "String 1", "string_key2" => "String 2"}
     def input_phrases(phrases, options={})
-      strings = phrases.map do |string_key, string|
-        {:string_key => string_key, :string => string}
+      strings = phrases.map do |string_key, value|
+        if value.is_a? Array
+          output = []
+          value.each_with_index do |string, index|
+            output << {:string_key => string_key.to_s, :string => string, :context => index}
+          end
+          output
+        else
+          {:string_key => string_key.to_s, :string => value}
+        end
       end
-      input_strings(strings, options)
+      input_strings(strings.flatten(1), options)
     end
 
     # Add translation to a string.

@@ -21,7 +21,6 @@ describe OneSky::Translation do
       [{:string => "test1"}, {:string => "test2"}]
     }
 
-
     context "with an array of strings" do
       it "calls /string/input" do
         client.should_receive(:post).with("string/input", :input => JSON.dump(hash_array), :"platform-id" => platform_id)
@@ -72,6 +71,19 @@ describe OneSky::Translation do
   end
 
   describe "input_phrases" do
+    let(:hash_string) {
+      {:test1 => "string1", :test2 => "string2", :array1 => ["first", "second"]}
+    }
+
+    let(:hash_output) {
+      [
+        {:string_key => "test1", :string => "string1"},
+        {:string_key => "test2", :string => "string2"},
+        {:string_key => "array1", :string => "first", :context => 0},
+        {:string_key => "array1", :string => "second", :context => 1},
+      ]
+    }
+
     it "defers to input_strings" do
       translation.should_receive(:input_strings).with([{:string_key => "test1", :string => "Test 1"}], {})
       translation.input_phrases("test1" => "Test 1")
@@ -80,6 +92,11 @@ describe OneSky::Translation do
     it "passes on a :tag" do
       translation.should_receive(:input_strings).with([{:string_key => "test1", :string => "Test 1"}], {:tag => "tagged"})
       translation.input_phrases({"test1" => "Test 1"}, :tag => "tagged")
+    end
+
+    it "transform an hash of strings" do
+      translation.should_receive(:input_strings).with(hash_output, {})
+      translation.input_phrases(hash_string)
     end
 
   end
