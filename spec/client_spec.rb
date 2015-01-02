@@ -60,7 +60,8 @@ describe OneSky::Client do
             :timestamp => timestamp,
             :"dev-hash" => Digest::MD5.hexdigest(timestamp + secret)
           },
-          :content_type => "text/plain; charset=UTF-8"}
+          :content_type => "text/plain; charset=UTF-8",
+          :"Onesky-Plugin" => "rudy-wrapper-old"}
         ).and_return(fake_response)
         client.get("some_path/to/something")
       end
@@ -77,9 +78,28 @@ describe OneSky::Client do
             :"dev-hash" => Digest::MD5.hexdigest(timestamp + secret),
             :some => "other param"
           },
-          :content_type => "text/plain; charset=UTF-8"}
+          :content_type => "text/plain; charset=UTF-8",
+          :"Onesky-Plugin" => "rudy-wrapper-old"}
         ).and_return(fake_response)
         client.get("some_path/to/something", :some => "other param")
+      end
+    end
+
+    it "set plugin code for custom header" do
+      Time.freeze! do
+        timestamp = Time.now.to_i.to_s
+        RestClient.should_receive(:get).with(
+          kind_of(String),
+          {:params => {
+            :"api-key" => api_key,
+            :timestamp => timestamp,
+            :"dev-hash" => Digest::MD5.hexdigest(timestamp + secret)
+          },
+          :content_type => "text/plain; charset=UTF-8",
+          :"Onesky-Plugin" => "fake_plugin_code"}
+        ).and_return(fake_response)
+        client.plugin_code = 'fake_plugin_code'
+        client.get("some_path/to/something")
       end
     end
     
@@ -123,7 +143,8 @@ describe OneSky::Client do
             :"api-key" => api_key,
             :timestamp => timestamp,
             :"dev-hash" => Digest::MD5.hexdigest(timestamp + secret),
-            :content_type => "text/plain; charset=UTF-8"
+            :content_type => "text/plain; charset=UTF-8",
+            :"Onesky-Plugin" => "rudy-wrapper-old"
           }
         ).and_return(fake_response)
         client.post("some_path/to/something")
@@ -140,10 +161,29 @@ describe OneSky::Client do
             :timestamp => timestamp,
             :"dev-hash" => Digest::MD5.hexdigest(timestamp + secret),
             :some => "other param",
-            :content_type => "text/plain; charset=UTF-8"
+            :content_type => "text/plain; charset=UTF-8",
+            :"Onesky-Plugin" => "rudy-wrapper-old"
           }
         ).and_return(fake_response)
         client.post("some_path/to/something", :some => "other param")
+      end
+    end
+
+    it "set plugin code for custom header" do
+      Time.freeze! do
+        timestamp = Time.now.to_i.to_s
+        RestClient.should_receive(:post).with(
+          kind_of(String),
+          {
+            :"api-key" => api_key,
+            :timestamp => timestamp,
+            :"dev-hash" => Digest::MD5.hexdigest(timestamp + secret),
+            :content_type => "text/plain; charset=UTF-8",
+            :"Onesky-Plugin" => "fake_plugin_code"
+          }
+        ).and_return(fake_response)
+        client.plugin_code = "fake_plugin_code"
+        client.post("some_path/to/something")
       end
     end
     
