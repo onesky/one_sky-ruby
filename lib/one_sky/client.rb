@@ -10,12 +10,15 @@ module OneSky
   #   http://developer.oneskyapp.com/api/list/v/2
   #
   class Client
-    attr_accessor :api_key, :api_secret
+    attr_accessor :api_key, :api_secret, :plugin_code
 
     # Provide the name of the project you created on the OneSky website. Also, the API key and secret shown there.
     def initialize(api_key, api_secret)
       raise ArgumentError, "api_key, api_secret cannot be nil." unless [api_key, api_secret].all?
       @api_key, @api_secret = api_key, api_secret
+
+      # code for custom header
+      @plugin_code = 'rudy-wrapper-old'
     end
     
     # Api version 2
@@ -49,6 +52,7 @@ module OneSky
     
     def fetch_response(http_verb, path, params, options)
       options ||= {:content_type => "text/plain; charset=UTF-8"}
+      options = options.merge({:"Onesky-Plugin" => @plugin_code})
       params = authorization_params.merge(params)
       path = api_path(path)
       
