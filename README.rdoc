@@ -1,3 +1,6 @@
+We have the most updated gem here:
+https://github.com/onesky/onesky-ruby
+
 = OneSky: The Community-Powered Translation Service
 
 OneSky[link:http://www.oneskyapp.com] is a new service that lets developers reach a global audience by easily enabling them to translate their websites and applications to different languages through the help of the community.
